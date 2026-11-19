@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Waste Your Time</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 20px;
+      padding: 28px 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #f59e0b;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 26px;
+      line-height: 1.4;
+      color: #38bdf8;
+    }
+
+    p {
+      margin: 0 0 22px;
+      font-size: 16px;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .timer-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 22px;
+    }
+
+    .timer-label {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+
+    .timer-value {
+      font-size: 32px;
+      font-weight: 900;
+      color: #f43f5e;
+      direction: ltr;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 14px;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.2s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    .btn-primary {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    .btn-danger {
+      background: #f43f5e;
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: #f8fafc;
+      font-size: 14px;
+      padding: 12px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .troll-area {
+      height: 110px;
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    #runawayBtn {
+      position: absolute;
+      width: 170px;
+      left: 50%;
+      top: 30px;
+      transform: translateX(-50%);
+      padding: 12px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="badge">WASTE YOUR TIME</div>
+
+    <div class="timer-box">
+      <div class="timer-label">الوقت اللي ضيّعته من حياتك هنا</div>
+      <div class="timer-value" id="timer">0.0 ث</div>
+    </div>
+
+    <div id="screen1">
+      <h1>مبروك! 🎉<br>لقد فقدت وقتك بنجاح.</h1>
+      <p>خلاص انتهت اللعبة. حرفياً ما في شي ثاني تسويه هنا... إلا لو مصمم تضيّع وقتك أكثر!</p>
+      <button class="btn btn-primary" onclick="goToScreen2()">أبي أضيّع وقتي أكثر</button>
+      <button class="btn btn-secondary" onclick="shareScore()">مشاركة النتيجة مع صديق</button>
+    </div>
+
+    <div id="screen2" class="hidden">
+      <h1 id="s2Title">قلت لك خلاص! 🤨</h1>
+      <p id="s2Text">طيب جرب اضغط على زر "الفوز السريع" إذا تقدر:</p>
+      <div class="troll-area" id="trollArea">
+        <button class="btn btn-danger" id="runawayBtn" onclick="catchBtn()">الفوز السريع 🏆</button>
+      </div>
+      <button class="btn btn-secondary" onclick="shareScore()">اعترف بالهزيمة وشارك وقتك</button>
+    </div>
+
+    <div id="screen3" class="hidden">
+      <h1>أسطورة إضاعة الوقت! 👑</h1>
+      <p id="finalMsg">وصلت للنهاية... والنتيجة؟ ولا شي، بس رقمك صار أكبر!</p>
+      <button class="btn btn-primary" onclick="restartGame()">ضيّع وقتك من جديد</button>
+      <button class="btn btn-secondary" onclick="shareScore()">تحدّى صديقك يضيع وقت أكثر</button>
+    </div>
+  </div>
+
+  <script>
+    let startTime = Date.now();
+    let dodgeCount = 0;
+
+    setInterval(() => {
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+      document.getElementById('timer').textContent = elapsed + ' ث';
+    }, 100);
+
+    function goToScreen2() {
+      document.getElementById('screen1').classList.add('hidden');
+      document.getElementById('screen2').classList.remove('hidden');
+    }
+
+    const runawayBtn = document.getElementById('runawayBtn');
+    const trollArea = document.getElementById('trollArea');
+
+    function moveButton() {
+      if (dodgeCount >= 5) return;
+      dodgeCount++;
+
+      const maxX = trollArea.clientWidth - runawayBtn.offsetWidth;
+      const maxY = trollArea.clientHeight - runawayBtn.offsetHeight;
+
+      const randomX = Math.max(0, Math.floor(Math.random() * maxX));
+      const randomY = Math.max(0, Math.floor(Math.random() * maxY));
+
+      runawayBtn.style.transform = 'none';
+      runawayBtn.style.left = randomX + 'px';
+      runawayBtn.style.top = randomY + 'px';
+
+      const taunts = [
+        'بطيء! حاول مرة ثانية 😂',
+        'قربت... بس لا!',
+        'ليش لسا تحاول؟',
+        'الوقت قاعد يمشي ترا ⏳',
+        'آخر محاولة، رح أرحمك!'
+      ];
+      document.getElementById('s2Text').textContent = taunts[dodgeCount - 1];
+    }
+
+    runawayBtn.addEventListener('touchstart', (e) => {
+      if (dodgeCount < 5) {
+        e.preventDefault();
+        moveButton();
+      }
+    });
+
+    runawayBtn.addEventListener('mouseover', () => {
+      if (dodgeCount < 5) {
+        moveButton();
+      }
+    });
+
+    function catchBtn() {
+      document.getElementById('screen2').classList.add('hidden');
+      document.getElementById('screen3').classList.remove('hidden');
+      const total = ((Date.now() - startTime) / 1000).toFixed(1);
+      document.getElementById('finalMsg').textContent =
+        `مبروك! مسكت الزر بعد ما ضيّعت ${total} ثانية من حياتك على لا شيء.`;
+    }
+
+    function restartGame() {
+      dodgeCount = 0;
+      runawayBtn.style.left = '50%';
+      runawayBtn.style.top = '30px';
+      runawayBtn.style.transform = 'translateX(-50%)';
+      document.getElementById('s2Text').textContent = 'طيب جرب اضغط على زر "الفوز السريع" إذا تقدر:';
+      document.getElementById('screen3').classList.add('hidden');
+      document.getElementById('screen1').classList.remove('hidden');
+    }
+
+    function shareScore() {
+      const total = ((Date.now() - startTime) / 1000).toFixed(1);
+      const text = `لعبت Waste Your Time وضيّعت ${total} ثانية من حياتي بنجاح! تتحداني؟`;
+      if (navigator.share) {
+        navigator.share({ title: 'Waste Your Time', text: text });
+      } else {
+        alert(text);
+      }
+    }
+  </script>
+
+</body>
+</html>
